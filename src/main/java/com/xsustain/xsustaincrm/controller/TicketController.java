@@ -43,6 +43,16 @@ public class TicketController {
         return ticketIService.getAllTickets();
     }
 
+    @GetMapping("/getByAssignedUserId/{userId}")
+    public List<Ticket> getTicketsByAssignedUserId(@PathVariable long userId) {
+        return ticketIService.getTicketsByAssignedUserId(userId);
+    }
+
+    @GetMapping("/getByOwnerId/{ownerId}")
+    public List<Ticket> getTicketsByOwnerId(@PathVariable long ownerId) {
+        return ticketIService.getTicketsByOwnerId(ownerId);
+    }
+
     @GetMapping("/get/{idTicket}")
     public TicketDto getOneTicket(@PathVariable long idTicket) {
         return ticketIService.getOneTicket(idTicket);

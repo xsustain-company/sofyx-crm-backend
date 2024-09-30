@@ -85,6 +85,30 @@ public class TicketService implements TicketIService {
     }
 
     @Override
+    public List<Ticket> getTicketsByAssignedUserId(long userId) {
+        List<Ticket> tickets = ticketRepository.findTicketsByAssignedUserId(userId);
+        tickets.stream().forEach(
+                ticket -> {
+                    ticket.setOwner(userMapper.mapToUser(ticket.getOwner()));
+                    ticket.setAssigned(userMapper.mapToUserList(ticket.getAssigned()));
+                });
+
+        return tickets;
+    }
+
+    @Override
+    public List<Ticket> getTicketsByOwnerId(long ownerId) {
+        List<Ticket> tickets = ticketRepository.findTicketsByOwnerId(ownerId);
+        tickets.stream().forEach(
+                ticket -> {
+                    ticket.setOwner(userMapper.mapToUser(ticket.getOwner()));
+                    ticket.setAssigned(userMapper.mapToUserList(ticket.getAssigned()));
+                });
+
+        return tickets;
+    }
+
+    @Override
     public TicketDto getOneTicket(long idTicket) {
         Ticket ticket = ticketRepository.findById(idTicket).get();
         ticket.setOwner(userMapper.mapToUser(ticket.getOwner()));

@@ -15,6 +15,10 @@ public interface TicketIService {
 
     public List<Ticket> getAllTickets();
 
+    public List<Ticket> getTicketsByAssignedUserId(long userId);
+
+    public List<Ticket> getTicketsByOwnerId(long ownerId);
+
     public TicketDto getOneTicket(long idTicket);
 
     public TicketDto deleteTicket(long idTicket);
