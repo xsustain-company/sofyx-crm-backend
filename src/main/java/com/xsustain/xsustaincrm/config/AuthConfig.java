@@ -50,7 +50,15 @@ public class AuthConfig {
                                 "/api/v1/auth/validateAccount/**",
                                 "/api/v1/auth/resetPassword/**",
                                 "/api/v1/auth/forgotPassword",
-                                "/user-service/v3/api-docs/**", "/actuator/health")
+                                "/api/v1/mailing/oauth/hi",
+                                "/user-service/v3/api-docs/**", 
+                                "/actuator/health",
+                                "/api/v1/mailing/oauth/exchange",
+                                "/api/v1/mailing/get-email",
+                                "/api/v1/mailing/search-inbox",
+                                "/api/v1/mailing/schedule-email",
+                                "/api/v1/mailing/send-email",
+                                "**")
                         .permitAll().anyRequest()
                         .authenticated())
                 .sessionManagement((session) -> session

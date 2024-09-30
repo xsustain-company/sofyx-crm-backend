@@ -203,9 +203,11 @@ public class UserService implements UserIService {
         return diff.toMinutes() >= AuthenticationConstants.EXPIRE_TOKEN_AFTER_MINUTES;
     }
     public UserDto createAccount(UserRegisterDTO userRegisterDTO, RoleType roleType) throws MessagingException {
+        
         if(userRepository.existsByEmail(userRegisterDTO.getEmail())){
             throw new UserServiceCustomException("Email must be unique","DUPLICATED_EMAIL");
         }
+        
         User user=userMapper.mapToUser(userRegisterDTO);
         user.setCreationDate(Instant.now());
         user.setPassword(passwordEncoder.encode(userRegisterDTO.getPassword()));
