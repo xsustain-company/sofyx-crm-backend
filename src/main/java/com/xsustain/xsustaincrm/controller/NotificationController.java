@@ -9,9 +9,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
-@RequestMapping("/api/notifications")
+@RequestMapping("/api/v1/notifications")
 public class NotificationController {
 
     @Autowired
@@ -21,7 +23,7 @@ public class NotificationController {
     NotificationMapper notificationMapper;
 
     // Create a notification for multiple users
-    @PostMapping("/create")
+    @PostMapping("/create-multiple")
     public ResponseEntity<List<NotificationDto>> createNotifications(
             @RequestBody NotificationsDto notificationsDto,
             @RequestParam List<Long> userIds) {
@@ -29,15 +31,21 @@ public class NotificationController {
         return ResponseEntity.ok(createdNotifications);
     }
 
+    @PostMapping("/create-single")
+    public ResponseEntity<NotificationDto> createNotification(@RequestBody NotificationDto notificationDto) {
+        NotificationDto createdNotification = notificationService.createNotification(notificationDto);
+        return ResponseEntity.ok(createdNotification);
+    }
+
     // Delete a notification by its ID
-    @DeleteMapping("/{idNotification}")
+    @DeleteMapping("/delete/{idNotification}")
     public ResponseEntity<NotificationDto> deleteNotification(@PathVariable long idNotification) {
         NotificationDto deletedNotification = notificationService.deleteNotification(idNotification);
         return ResponseEntity.ok(deletedNotification);
     }
 
     // Get a single notification by notification ID and user ID
-    @GetMapping("/{idNotification}/user/{userId}")
+    @GetMapping("/get-one/{idNotification}/user/{userId}")
     public ResponseEntity<NotificationDto> getNotificationByUser(
             @PathVariable long idNotification,
             @PathVariable long userId) {
