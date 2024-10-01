@@ -2,14 +2,12 @@ package com.xsustain.xsustaincrm.model;
 
 import com.xsustain.xsustaincrm.model.enume.PipelineType;
 import com.xsustain.xsustaincrm.model.enume.PriorityType;
-import com.xsustain.xsustaincrm.model.enume.RoleType;
 import com.xsustain.xsustaincrm.model.enume.SourceType;
 import com.xsustain.xsustaincrm.model.enume.StatusType;
 
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.List;
 

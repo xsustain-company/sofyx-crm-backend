@@ -1,19 +1,15 @@
 package com.xsustain.xsustaincrm.dto;
 
-import com.xsustain.xsustaincrm.model.Permission;
 import com.xsustain.xsustaincrm.model.User;
 import com.xsustain.xsustaincrm.model.enume.PipelineType;
 import com.xsustain.xsustaincrm.model.enume.PriorityType;
-import com.xsustain.xsustaincrm.model.enume.RoleType;
 import com.xsustain.xsustaincrm.model.enume.SourceType;
 import com.xsustain.xsustaincrm.model.enume.StatusType;
 
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.List;
 

@@ -7,9 +7,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
-import java.util.Date;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -31,6 +28,5 @@ public class UserRegisterDTO {
     private String lastName;
     @NotNull(message = "Invalid role type: roleType is NULL")
     private RoleType roleTypes;
-
 
 }
