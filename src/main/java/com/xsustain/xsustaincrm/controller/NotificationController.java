@@ -1,6 +1,7 @@
 package com.xsustain.xsustaincrm.controller;
 
 import com.xsustain.xsustaincrm.dao.mapper.NotificationMapper;
+import com.xsustain.xsustaincrm.dto.MultiNotifsCreateDto;
 import com.xsustain.xsustaincrm.dto.NotificationDto;
 import com.xsustain.xsustaincrm.dto.NotificationsDto;
 import com.xsustain.xsustaincrm.service.NotificationIService;
@@ -9,8 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
 @RequestMapping("/api/v1/notifications")
@@ -25,9 +24,13 @@ public class NotificationController {
     // Create a notification for multiple users
     @PostMapping("/create-multiple")
     public ResponseEntity<List<NotificationDto>> createNotifications(
-            @RequestBody NotificationsDto notificationsDto,
-            @RequestParam List<Long> userIds) {
-        List<NotificationDto> createdNotifications = notificationService.createNotifications(notificationsDto, userIds);
+            @RequestBody MultiNotifsCreateDto all) {
+        NotificationsDto notificationDto = all.getNotification();
+        List<Long> userIds = all.getUsers();
+
+        System.out.println("UserIds: " + userIds.toString());
+
+        List<NotificationDto> createdNotifications = notificationService.createNotifications(notificationDto, userIds);
         return ResponseEntity.ok(createdNotifications);
     }
 
@@ -44,12 +47,12 @@ public class NotificationController {
         return ResponseEntity.ok(deletedNotification);
     }
 
-    // Get a single notification by notification ID and user ID
-    @GetMapping("/get-one/{idNotification}/user/{userId}")
+    @GetMapping("/get-one")
     public ResponseEntity<NotificationDto> getNotificationByUser(
-            @PathVariable long idNotification,
-            @PathVariable long userId) {
-        NotificationDto notification = notificationService.getOneNotificationByUser(idNotification, userId);
+            @RequestParam("userId") Long userId,
+            @RequestParam("notificationId") Long notificationId) {
+
+        NotificationDto notification = notificationService.getOneNotificationByUser(notificationId, userId);
         return ResponseEntity.ok(notification);
     }
 
