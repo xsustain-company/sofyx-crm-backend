@@ -9,7 +9,7 @@ spring:
       max-request-size: 100MB
 
   datasource:
-    url: jdbc:mysql://localhost:3306/XsustainCRMFDataBase
+    url: jdbc:mysql://localhost:3306/sofyx
     username: root
     password:
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -33,7 +33,9 @@ token:
 super:
   user:
     mail: fn.mohsen.tu@gmail.com
-
+logging:
+    level:
+      org.springframework: debug
 retry:
   config:
     maxAttempts: 3

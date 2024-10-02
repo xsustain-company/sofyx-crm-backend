@@ -30,10 +30,13 @@ public class UserController {
     public UserDto createUserAccount(@Valid @RequestBody UserRegisterDTO userRegisterDTO) throws MessagingException {
         return userIService.createUserAccount(userRegisterDTO);
     }
+
     @PostMapping("/user/registerFromAdmin")
-    public UserDto createUserAndAssignedPermissions(@Valid @RequestBody UserRegisterByAdminDTO userRegisterByAdminDTO) throws MessagingException {
+    public UserDto createUserAndAssignedPermissions(@Valid @RequestBody UserRegisterByAdminDTO userRegisterByAdminDTO)
+            throws MessagingException {
         return userIService.createUserAccountAndAssignedPermissions(userRegisterByAdminDTO);
     }
+
     @PostMapping("/token")
     public JwtResponse login(@Valid @RequestBody LoginRequestDTO loginData) {
         try {
@@ -44,28 +47,32 @@ public class UserController {
             throw new UserServiceCustomException("Invalid Information", "BAD_LOGIN_CREDENTIALS");
         }
     }
+
     @PutMapping("/validateAccount/{verificationCode}")
     public ResponseDto validateAccount(@PathVariable Long verificationCode) throws MessagingException {
         return userIService.validateAccount(verificationCode);
     }
 
     @PostMapping("/forgotPassword")
-    public ResponseDto forgotPassword( @NotBlank(message = "Invalid Email: Empty Email")
-                                       @NotNull(message = "Invalid Email: Email is NULL")
-                                       @Email(message = "Invalid email")
-                                       @RequestParam String email) throws MessagingException {
+    public ResponseDto forgotPassword(
+            @NotBlank(message = "Invalid Email: Empty Email") @NotNull(message = "Invalid Email: Email is NULL") @Email(message = "Invalid email") @RequestParam String email)
+            throws MessagingException {
         return userIService.forgotPassword(email);
     }
+
     @PutMapping("/resetPassword/{token}")
-    public ResponseDto resetPassword(@PathVariable Long token,@RequestBody ResetPasswordRequest  newPassword) {
-        return userIService.resetPassword(token, newPassword);
+    public ResponseDto resetPassword(@PathVariable Long token, @RequestBody ResetPasswordRequest password) {
+        return userIService.resetPassword(token, password);
     }
+
     @GetMapping("/getUserById")
     public UserDto getUserById() {
         return userIService.getUserById();
     }
+
     @PutMapping("/update")
-    public UserUpdateProfile updateProfile(@Valid @RequestBody UserUpdateProfile userUpdateProfile,@RequestParam long idUser) {
+    public UserUpdateProfile updateProfile(@Valid @RequestBody UserUpdateProfile userUpdateProfile,
+            @RequestParam long idUser) {
         return userIService.updateProfile(userUpdateProfile, idUser);
     }
 

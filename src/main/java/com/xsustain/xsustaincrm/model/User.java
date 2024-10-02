@@ -26,6 +26,7 @@ public class User {
     @Column(nullable = false)
     private String password;
     private String phoneNumber;
+    private String grandId;
     private Instant creationDate;
     private boolean validated;
     private Long tokenToValidate;
