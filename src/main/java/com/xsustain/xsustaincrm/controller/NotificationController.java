@@ -28,8 +28,6 @@ public class NotificationController {
         NotificationsDto notificationDto = all.getNotification();
         List<Long> userIds = all.getUsers();
 
-        System.out.println("UserIds: " + userIds.toString());
-
         List<NotificationDto> createdNotifications = notificationService.createNotifications(notificationDto, userIds);
         return ResponseEntity.ok(createdNotifications);
     }
