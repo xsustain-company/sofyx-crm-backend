@@ -22,6 +22,8 @@ public interface UserIService {
 
     public UserDto getUserById();
 
+    public List<UserDto> getAllUsers();
+
     public UserUpdateProfile updateProfile(UserUpdateProfile userUpdateProfile, long idUser);
 
     public ResponseDto deleteUser(long idUser);

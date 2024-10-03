@@ -11,13 +11,13 @@ import java.util.List;
 @Repository
 public interface TicketRepository extends CrudRepository<Ticket, Long> {
 
-    @Query("SELECT t FROM Ticket t")
+    @Query("SELECT t FROM Ticket t WHERE t.deleted = false")
     List<Ticket> findAllTicketsAsList();
 
-    @Query("SELECT t FROM Ticket t JOIN t.assigned a WHERE a.idUser = :userId")
+    @Query("SELECT t FROM Ticket t JOIN t.assigned a WHERE a.idUser = :userId AND t.deleted = false")
     List<Ticket> findTicketsByAssignedUserId(@Param("userId") long userId);
 
-    @Query("SELECT t FROM Ticket t WHERE t.owner.idUser = :ownerId")
+    @Query("SELECT t FROM Ticket t WHERE t.owner.idUser = :ownerId AND t.deleted = false")
     List<Ticket> findTicketsByOwnerId(@Param("ownerId") long ownerId);
 
 }

@@ -61,4 +61,6 @@ public class TicketDto {
     @NotNull(message = "Invalid assigned: assigned is NULL")
     private List<User> assigned;
 
+    private Boolean deleted;
+
 }
