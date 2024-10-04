@@ -6,10 +6,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.xsustain.xsustaincrm.dto.StageDto;
 import com.xsustain.xsustaincrm.model.Stage;
 import com.xsustain.xsustaincrm.model.User;
-
+import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.Getter;
 
+@Component
+@Getter
 public class StageMapper {
 
     @Autowired

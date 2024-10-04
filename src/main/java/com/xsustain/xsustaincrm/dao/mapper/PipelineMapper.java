@@ -1,12 +1,19 @@
 package com.xsustain.xsustaincrm.dao.mapper;
 
-import com.xsustain.xsustaincrm.dto.PipelineDto;
+import com.xsustain.xsustaincrm.dto.*;
 import com.xsustain.xsustaincrm.model.Pipeline;
+import com.xsustain.xsustaincrm.model.Ticket;
+import com.xsustain.xsustaincrm.model.User;
+import lombok.Getter;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
+@Getter
 public class PipelineMapper {
 
     @Autowired

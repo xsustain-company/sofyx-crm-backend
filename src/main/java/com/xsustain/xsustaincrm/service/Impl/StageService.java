@@ -27,6 +27,7 @@ public class StageService implements StageIService {
     @Override
     public StageDto createStage(StageDto stageDto) {
         Stage stage = modelMapper.map(stageDto, Stage.class);
+        stage.setDeleted(false);
         stageRepository.save(stage);
         return stageDto;
     }
@@ -34,7 +35,8 @@ public class StageService implements StageIService {
     @Override
     public StageDto updateStage(StageDto stageDto, long idStage) {
         Stage stage = stageRepository.findById(idStage).orElseThrow(() -> new RuntimeException("Stage not found"));
-        modelMapper.map(stageDto, stage);
+        stage.setTitle(stageDto.getTitle());
+        stage.setDescription(stageDto.getDescription());
         stageRepository.save(stage);
         return stageDto;
     }

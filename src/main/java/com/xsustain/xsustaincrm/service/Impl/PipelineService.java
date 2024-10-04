@@ -1,6 +1,7 @@
 package com.xsustain.xsustaincrm.service.Impl;
 
 import com.xsustain.xsustaincrm.dao.mapper.PipelineMapper;
+import com.xsustain.xsustaincrm.dao.mapper.StageMapper;
 import com.xsustain.xsustaincrm.dto.PipelineDto;
 import com.xsustain.xsustaincrm.model.Pipeline;
 import com.xsustain.xsustaincrm.repository.PipelineRepository;
@@ -9,7 +10,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -20,6 +20,9 @@ public class PipelineService implements PipelineIService {
 
     @Autowired
     PipelineMapper pipelineMapper;
+
+    @Autowired
+    StageMapper stageMapper;
 
     @Autowired
     ModelMapper modelMapper;
@@ -36,7 +39,11 @@ public class PipelineService implements PipelineIService {
     public PipelineDto updatePipeline(PipelineDto pipelineDto, long idPipeline) {
         Pipeline pipeline = pipelineRepository.findById(idPipeline)
                 .orElseThrow(() -> new RuntimeException("Pipeline not found"));
-        modelMapper.map(pipelineDto, pipeline);
+        pipeline.setPipelineName(pipelineDto.getPipelineName());
+        pipeline.setNumberOfDeals(pipelineDto.getNumberOfDeals());
+        pipeline.setStatus(pipelineDto.getStatus());
+        pipeline.setStages(stageMapper.mapToStages(pipelineDto.getStages()));
+        pipeline.setTotalDealValue(pipelineDto.getTotalDealValue());
         pipelineRepository.save(pipeline);
         return pipelineDto;
     }
