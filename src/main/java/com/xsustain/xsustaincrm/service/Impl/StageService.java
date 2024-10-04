@@ -55,7 +55,7 @@ public class StageService implements StageIService {
     @Override
     public StageDto deleteStage(long idStage) {
         Stage stage = stageRepository.findById(idStage).orElseThrow(() -> new RuntimeException("Stage not found"));
-        stageRepository.delete(stage);
+        stage.setDeleted(true);
         return stageMapper.mapToStageDto(stage);
     }
 }
