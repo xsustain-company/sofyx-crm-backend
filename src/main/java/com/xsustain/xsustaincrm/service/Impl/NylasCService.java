@@ -32,9 +32,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.xsustain.xsustaincrm.dto.EmailObjectDTO;
+import com.xsustain.xsustaincrm.dto.EmailTimeObjectDTO;
 import com.xsustain.xsustaincrm.dto.ResponseDto;
 import com.xsustain.xsustaincrm.exception.UserServiceCustomException;
+import com.xsustain.xsustaincrm.model.InboxEmail;
 import com.xsustain.xsustaincrm.model.User;
+import com.xsustain.xsustaincrm.repository.InboxRepository;
 import com.xsustain.xsustaincrm.repository.UserRepository;
 import com.xsustain.xsustaincrm.service.NylasService;
 import com.xsustain.xsustaincrm.utility.NylasConfigManager;
@@ -47,8 +50,9 @@ public class NylasCService implements NylasService {
     private final String callbackUri;
     private final String clientId;
 
+
     @Autowired
-    private UserRepository userRepository;
+    private InboxRepository inboxEmailRepository;
 
     @Autowired
     private ResponseUtil responseUtil;
@@ -65,8 +69,8 @@ public class NylasCService implements NylasService {
     SessionService sessionService;
 
     @Override
-    public ResponseEntity<String> saveGrandId(String code) throws MessagingException {
-        System.out.println("Starting code exchange for: " + code);
+    public ResponseEntity<String> generateGrantId(String code) throws MessagingException {
+        System.out.println("dddddddddddddddd"+code);
         CodeExchangeRequest codeRequest = new CodeExchangeRequest(
                 "http://localhost:8085/api/v1/mailing/oauth/exchange", // redirectUri
                 code, // authorization code
@@ -74,16 +78,13 @@ public class NylasCService implements NylasService {
                 null, // access token (if applicable)
                 "nylas");
 
-        System.out.println("Attempting code exchange with callbackUri: " + callbackUri + ", clientId: " + clientId);
 
         try {
             CodeExchangeResponse codeResponse = nylasClient.auth().exchangeCodeForToken(codeRequest);
-            System.out.println("Code exchange successful. Grant ID: " + codeResponse.getGrantId());
+
             String encodedGrantId = URLEncoder.encode(codeResponse.getGrantId(), StandardCharsets.UTF_8.toString());
 
-            // return responseUtil.createResponse("User updated", "SUCCESS",
-            // codeResponse.getGrantId());
-            String redirectUrl = "http://localhost:3000/redirect?grantId=" + encodedGrantId;
+            String redirectUrl = "http://localhost:3000/react/template/processing?redirectURI=http://localhost:3000/react/template/application/email&grantId=" + encodedGrantId;
             return ResponseEntity.status(302)
                     .location(URI.create(redirectUrl))
                     .build();
@@ -97,14 +98,21 @@ public class NylasCService implements NylasService {
     }
 
     @Override
-    public ListResponse<Message> getEmail(String code) throws MessagingException {
-        System.out.println("Starting code exchange for: " + code);
-        ListMessagesQueryParams queryParams = new ListMessagesQueryParams.Builder().limit(5).build();
+    public ResponseDto saveGrandId(String code) throws MessagingException {
+
+        User user=sessionService.getUserBySession().get();
+
+        InboxEmail saveEmail = new InboxEmail();
+            saveEmail.setEmail(user.getEmail());
+            saveEmail.setGrantId(code);
+            saveEmail.setUser(user);
 
         try {
-            ListResponse<Message> message = nylasClient.messages().list(code, queryParams);
-            return message;
+            
+            inboxEmailRepository.save(saveEmail);
 
+            return responseUtil.createResponse("Your Token is successfully sended", "SUCCESS",
+            "EMail has been sent");
         } catch (Exception e) {
             System.err.println("Error during code exchange: " + e.getMessage());
             e.printStackTrace();
@@ -113,6 +121,44 @@ public class NylasCService implements NylasService {
 
         // Return success response
     }
+
+
+    @Override
+    public ListResponse<Message> getEmail() throws MessagingException {
+
+        ListMessagesQueryParams queryParams = new ListMessagesQueryParams.Builder().limit(10).build();
+        User user=sessionService.getUserBySession().get();
+
+        try {
+            ListResponse<Message> message = nylasClient.messages().list(user.getGrandId(), queryParams);
+            return message;
+
+        } catch (Exception e) {
+            System.err.println("Error during code exchange: " + e.getMessage());
+            throw new MessagingException("Failed to exchange code for token: " + e.getMessage());
+        }
+
+        // Return success response
+    }
+
+    @Override
+    public ListResponse<Message> getOneInbox(String code) throws MessagingException {
+
+        ListMessagesQueryParams queryParams = new ListMessagesQueryParams.Builder().limit(10).build();
+        User user=sessionService.getUserBySession().get();
+
+        try {
+            ListResponse<Message> message = nylasClient.messages().list(code, queryParams);
+            return message;
+
+        } catch (Exception e) {
+            System.err.println("Error during code exchange: " + e.getMessage());
+            throw new MessagingException("Failed to exchange code for token: " + e.getMessage());
+        }
+
+        // Return success response
+    }
+
 
     @Override
     public ListResponse<Message> searchInobx(String code, String search) throws MessagingException {
@@ -138,7 +184,7 @@ public class NylasCService implements NylasService {
 
         List<EmailName> emailNames = new ArrayList<>();
         TrackingOptions options = new TrackingOptions("Track this message", true, true, true);
-
+        System.out.println(email.getReceipient()  + email.getName());
         emailNames.add(new EmailName(email.getReceipient(), email.getName()));
 
         // CreateAttachmentRequest attachment =
@@ -165,8 +211,9 @@ public class NylasCService implements NylasService {
 
         // Return success response
     }
-
-    public ResponseDto scheduleEmail(String code, EmailObjectDTO email) throws MessagingException {
+    
+    @Override
+    public ResponseDto scheduleEmail(String code, EmailTimeObjectDTO email) throws MessagingException {
 
         List<EmailName> emailNames = new ArrayList<>();
         emailNames.add(new EmailName(email.getReceipient(), email.getName()));
@@ -197,6 +244,25 @@ public class NylasCService implements NylasService {
                     "EMail has been sent");
 
         } catch (Exception e) {
+            System.err.println("Error during code exchange: " + e.getMessage());
+            e.printStackTrace();
+            throw new MessagingException("Failed to exchange code for token: " + e.getMessage());
+        }
+
+        // Return success response
+    }
+
+    @Override
+    public  List<InboxEmail>  getMyCurrentEmails() throws MessagingException {
+
+        try {
+       
+            User user=sessionService.getUserBySession().get(); 
+            return inboxEmailRepository.findByUser(user);
+
+
+        } catch (Exception e) {
+
             System.err.println("Error during code exchange: " + e.getMessage());
             e.printStackTrace();
             throw new MessagingException("Failed to exchange code for token: " + e.getMessage());

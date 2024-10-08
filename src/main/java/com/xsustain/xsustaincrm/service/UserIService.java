@@ -1,11 +1,15 @@
 package com.xsustain.xsustaincrm.service;
 
 
+import com.nylas.models.ListResponse;
+import com.nylas.models.Message;
 import com.xsustain.xsustaincrm.dto.*;
 import com.xsustain.xsustaincrm.model.Permission;
 import jakarta.mail.MessagingException;
 
 import java.util.List;
+
+import org.springframework.http.ResponseEntity;
 
 public interface UserIService {
     public UserDto createUserAccount(UserRegisterDTO userRegisterDTO) throws MessagingException;

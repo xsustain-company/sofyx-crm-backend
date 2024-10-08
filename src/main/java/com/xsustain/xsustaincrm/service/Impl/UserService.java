@@ -1,5 +1,8 @@
 package com.xsustain.xsustaincrm.service.Impl;
 
+import com.nylas.models.CodeExchangeResponse;
+import com.nylas.models.ListResponse;
+import com.nylas.models.Message;
 import com.xsustain.xsustaincrm.constant.AuthenticationConstants;
 import com.xsustain.xsustaincrm.dao.mapper.UserMapper;
 import com.xsustain.xsustaincrm.dto.*;
@@ -15,9 +18,13 @@ import com.xsustain.xsustaincrm.utility.ResponseUtil;
 import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.net.URI;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -111,6 +118,10 @@ public class UserService implements UserIService {
         }
         return userDto;
     }
+
+
+   
+
 
     @Override
     public ResponseDto forgotPassword(String email) throws MessagingException {

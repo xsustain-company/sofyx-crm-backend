@@ -1,5 +1,6 @@
 package com.xsustain.xsustaincrm.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.xsustain.xsustaincrm.model.enume.RoleType;
 import jakarta.persistence.*;
 import lombok.*;
