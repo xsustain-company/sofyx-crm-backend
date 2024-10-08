@@ -70,6 +70,11 @@ public class UserController {
         return userIService.getUserById();
     }
 
+    @GetMapping("/getAllUsers")
+    public List<UserDto> getAllUsers() {
+        return userIService.getAllUsers();
+    }
+
     @PutMapping("/update")
     public UserUpdateProfile updateProfile(@Valid @RequestBody UserUpdateProfile userUpdateProfile,
             @RequestParam long idUser) {

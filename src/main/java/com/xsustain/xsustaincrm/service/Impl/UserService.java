@@ -24,6 +24,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.Random;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @Service
 public class UserService implements UserIService {
@@ -156,6 +158,18 @@ public class UserService implements UserIService {
     public UserDto getUserById() {
         User user = sessionService.getUserBySession().get();
         return userMapper.mapToUserDto(user);
+    }
+
+    @Override
+    public List<UserDto> getAllUsers() {
+        Iterable<User> users = userRepository.findAll();
+
+        // Using streams to map User to UserDto
+        List<UserDto> userDtos = StreamSupport.stream(users.spliterator(), false)
+                .map(user -> userMapper.mapToUserDto(user))
+                .collect(Collectors.toList());
+
+        return userDtos;
     }
 
     @Override

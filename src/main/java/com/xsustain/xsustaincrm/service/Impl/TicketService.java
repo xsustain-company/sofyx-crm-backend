@@ -49,6 +49,7 @@ public class TicketService implements TicketIService {
         ticket.setSource(ticketDto.getSource());
         ticket.setOwner(ticketDto.getOwner());
         ticket.setAssigned(ticketDto.getAssigned());
+        ticket.setDeleted(false);
         ticketRepository.save(ticket);
 
         return ticketDto;
@@ -125,7 +126,9 @@ public class TicketService implements TicketIService {
         ticket.setAssigned(new ArrayList<>(ticket.getAssigned()));
 
         // Delete the ticket from the repository
-        ticketRepository.delete(ticket);
+        // ticketRepository.delete(ticket);
+        ticket.setDeleted(true);
+        ticketRepository.save(ticket);
 
         // Map to DTO after ensuring assigned list is initialized properly
         return ticketMapper.mapToTicketDto(ticket);

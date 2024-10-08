@@ -24,30 +24,32 @@ public class Ticket {
     @Id
     private long idTicket;
 
-    private String ticketName;
+    private String ticketName; //
 
-    private String description;
+    private String description; //
 
-    private LocalDateTime closeDate;
+    private LocalDateTime closeDate; //
 
-    private LocalDateTime createdDate;
+    private LocalDateTime createdDate; //
 
     @Enumerated(EnumType.STRING)
-    private PipelineType pipeline;
+    private PipelineType pipeline; //
 
     @Enumerated(EnumType.STRING)
     private StatusType status;
 
     @Enumerated(EnumType.STRING)
-    private PriorityType priority;
+    private PriorityType priority; //
 
     @Enumerated(EnumType.STRING)
-    private SourceType source;
+    private SourceType source; //
+
+    private Boolean deleted;
 
     @ManyToOne
-    private User owner;
+    private User owner; //
 
     @ManyToMany
-    private List<User> assigned;
+    private List<User> assigned; //
 
 }
