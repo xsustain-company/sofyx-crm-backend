@@ -31,6 +31,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.Random;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @Service
 public class UserService implements UserIService {
@@ -56,10 +58,9 @@ public class UserService implements UserIService {
     SessionService sessionService;
     private Random random = new Random();
 
-
     @Override
     public UserDto createUserAccount(UserRegisterDTO userRegisterDTO) throws MessagingException {
-        return createAccount(userRegisterDTO,userRegisterDTO.getRoleTypes());
+        return createAccount(userRegisterDTO, userRegisterDTO.getRoleTypes());
     }
 
     @Override
@@ -81,7 +82,7 @@ public class UserService implements UserIService {
 
     @Override
     public ResponseDto validateAccount(Long verificationCode) throws MessagingException {
-        User user=userRepository.findByTokenToValidate(verificationCode);
+        User user = userRepository.findByTokenToValidate(verificationCode);
         if (Boolean.FALSE.equals(user.getTokenToValidate()) && !user.getTokenToValidate().equals(verificationCode)) {
             throw new UserServiceCustomException("Invalid verification code!", "INVALID_CODE");
         }
@@ -106,7 +107,8 @@ public class UserService implements UserIService {
     }
 
     @Override
-    public UserDto createUserAccountAndAssignedPermissions(UserRegisterByAdminDTO userRegisterByAdminDTO) throws MessagingException {
+    public UserDto createUserAccountAndAssignedPermissions(UserRegisterByAdminDTO userRegisterByAdminDTO)
+            throws MessagingException {
         UserDto userDto = createAccountByAdmin(userRegisterByAdminDTO, userRegisterByAdminDTO.getRoleTypes());
         User user = userRepository.findUserByEmail(userRegisterByAdminDTO.getEmail()).get();
         List<Permission> permissionList = userRegisterByAdminDTO.getPermissionList();
@@ -147,7 +149,8 @@ public class UserService implements UserIService {
 
     @Override
     public ResponseDto resetPassword(Long token, ResetPasswordRequest newPassword) {
-        User user=userRepository.findByTokenToForgotPassword(token);
+
+        User user = userRepository.findByTokenToForgotPassword(token);
         if (!Objects.equals(user.getTokenToForgotPassword(), token)) {
             throw new UserServiceCustomException("Token Invalid", "Token invalid");
         }
@@ -155,7 +158,6 @@ public class UserService implements UserIService {
         if (isTokenExpired(tokenCreationDate)) {
             return responseUtil.createResponse("Token expired", "Failed", "Token expired");
         }
-        System.out.println(newPassword);
         user.setPassword(passwordEncoder.encode(newPassword.getPassword()));
         user.setTokenToForgotPassword(null);
         user.setTokenToForgotPasswordCreationDate(null);
@@ -165,14 +167,27 @@ public class UserService implements UserIService {
 
     @Override
     public UserDto getUserById() {
-        User user=sessionService.getUserBySession().get();
+        User user = sessionService.getUserBySession().get();
         return userMapper.mapToUserDto(user);
+    }
+
+    @Override
+    public List<UserDto> getAllUsers() {
+        Iterable<User> users = userRepository.findAll();
+
+        // Using streams to map User to UserDto
+        List<UserDto> userDtos = StreamSupport.stream(users.spliterator(), false)
+                .map(user -> userMapper.mapToUserDto(user))
+                .collect(Collectors.toList());
+
+        return userDtos;
     }
 
     @Override
     public UserUpdateProfile updateProfile(UserUpdateProfile userUpdateProfile, long idUser) {
         User user = userRepository.findById(idUser)
-                .orElseThrow(() -> new UserServiceCustomException("User not found with id: " + idUser ,"USER NOT FOUNDQ"));
+                .orElseThrow(
+                        () -> new UserServiceCustomException("User not found with id: " + idUser, "USER NOT FOUNDQ"));
         User user1 = userMapper.mapToUserUpdateProfile(userUpdateProfile);
 
         user.setFirstName(user1.getFirstName());
@@ -207,19 +222,19 @@ public class UserService implements UserIService {
         return responseUtil.createResponse("User logout", "SUCCESS", "Your account logout with succes.");
     }
 
-
     private boolean isTokenExpired(final LocalDateTime tokenCreationDate) {
         LocalDateTime now = LocalDateTime.now();
         Duration diff = Duration.between(tokenCreationDate, now);
         return diff.toMinutes() >= AuthenticationConstants.EXPIRE_TOKEN_AFTER_MINUTES;
     }
+
     public UserDto createAccount(UserRegisterDTO userRegisterDTO, RoleType roleType) throws MessagingException {
-        
-        if(userRepository.existsByEmail(userRegisterDTO.getEmail())){
-            throw new UserServiceCustomException("Email must be unique","DUPLICATED_EMAIL");
+
+        if (userRepository.existsByEmail(userRegisterDTO.getEmail())) {
+            throw new UserServiceCustomException("Email must be unique", "DUPLICATED_EMAIL");
         }
-        
-        User user=userMapper.mapToUser(userRegisterDTO);
+
+        User user = userMapper.mapToUser(userRegisterDTO);
         user.setCreationDate(Instant.now());
         user.setPassword(passwordEncoder.encode(userRegisterDTO.getPassword()));
         user.setValidated(false);
@@ -227,17 +242,19 @@ public class UserService implements UserIService {
         user.setTokenToValidate(generateOTPToSend());
         user.setValidateCodeCreationDate(LocalDateTime.now());
         user.setActiveUser(false);
-        User userSave=userRepository.save(user);
-        UserDto userDTO=userMapper.mapToUserDto(userSave);
+        User userSave = userRepository.save(user);
+        UserDto userDTO = userMapper.mapToUserDto(userSave);
         emailUtility.sendVerificationEmail(userRegisterDTO.getEmail(), userRegisterDTO.getFirstName(),
                 user.getTokenToValidate(), user.getRoleTypes());
         return userDTO;
     }
-    public UserDto createAccountByAdmin(UserRegisterByAdminDTO userRegisterByAdminDTO, RoleType roleType) throws MessagingException {
-        if(userRepository.existsByEmail(userRegisterByAdminDTO.getEmail())){
-            throw new UserServiceCustomException("Email must be unique","DUPLICATED_EMAIL");
+
+    public UserDto createAccountByAdmin(UserRegisterByAdminDTO userRegisterByAdminDTO, RoleType roleType)
+            throws MessagingException {
+        if (userRepository.existsByEmail(userRegisterByAdminDTO.getEmail())) {
+            throw new UserServiceCustomException("Email must be unique", "DUPLICATED_EMAIL");
         }
-        User user=userMapper.mapToUser(userRegisterByAdminDTO);
+        User user = userMapper.mapToUser(userRegisterByAdminDTO);
         user.setCreationDate(Instant.now());
         user.setPassword(passwordEncoder.encode(userRegisterByAdminDTO.getPassword()));
         user.setValidated(false);
@@ -245,12 +262,13 @@ public class UserService implements UserIService {
         user.setTokenToValidate(generateOTPToSend());
         user.setValidateCodeCreationDate(LocalDateTime.now());
         user.setActiveUser(false);
-        User userSave=userRepository.save(user);
-        UserDto userDTO=userMapper.mapToUserDto(userSave);
+        User userSave = userRepository.save(user);
+        UserDto userDTO = userMapper.mapToUserDto(userSave);
         emailUtility.sendVerificationEmail(userRegisterByAdminDTO.getEmail(), userRegisterByAdminDTO.getFirstName(),
                 user.getTokenToValidate(), user.getRoleTypes());
         return userDTO;
     }
+
     private Long generateOTPToSend() {
         int min = 10000;
         int max = 99999;

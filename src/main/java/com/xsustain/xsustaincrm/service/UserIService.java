@@ -13,15 +13,21 @@ import org.springframework.http.ResponseEntity;
 
 public interface UserIService {
     public UserDto createUserAccount(UserRegisterDTO userRegisterDTO) throws MessagingException;
+
     public JwtResponse login(String email);
+
     public ResponseDto validateAccount(Long verificationCode) throws MessagingException;
 
-    public UserDto createUserAccountAndAssignedPermissions(UserRegisterByAdminDTO userRegisterByAdminDTO) throws MessagingException;
+    public UserDto createUserAccountAndAssignedPermissions(UserRegisterByAdminDTO userRegisterByAdminDTO)
+            throws MessagingException;
 
     public ResponseDto forgotPassword(String email) throws MessagingException;
+
     public ResponseDto resetPassword(Long token, ResetPasswordRequest newPassword);
 
     public UserDto getUserById();
+
+    public List<UserDto> getAllUsers();
 
     public UserUpdateProfile updateProfile(UserUpdateProfile userUpdateProfile, long idUser);
 
