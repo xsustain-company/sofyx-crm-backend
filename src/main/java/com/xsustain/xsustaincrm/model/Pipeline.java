@@ -27,6 +27,9 @@ public class Pipeline {
     @OneToMany
     private List<Stage> stages; // Stages in the pipeline
 
+    @OneToOne
+    private Stage currentStage; // Current Stage
+
     private LocalDateTime createdDate; // Created Date
 
     private String status; // Status of the pipeline

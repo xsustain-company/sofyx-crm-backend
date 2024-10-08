@@ -28,8 +28,10 @@ public class StageService implements StageIService {
     public StageDto createStage(StageDto stageDto) {
         Stage stage = modelMapper.map(stageDto, Stage.class);
         stage.setDeleted(false);
-        stageRepository.save(stage);
-        return stageDto;
+        Stage stagesave = stageRepository.save(stage);
+        // get the saved stage in dtabase
+
+        return stageMapper.mapToStageDto(stagesave);
     }
 
     @Override
@@ -56,6 +58,7 @@ public class StageService implements StageIService {
     public StageDto deleteStage(long idStage) {
         Stage stage = stageRepository.findById(idStage).orElseThrow(() -> new RuntimeException("Stage not found"));
         stage.setDeleted(true);
+        stageRepository.save(stage);
         return stageMapper.mapToStageDto(stage);
     }
 }

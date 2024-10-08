@@ -28,6 +28,9 @@ public class PipelineDto {
     @NotNull(message = "Invalid stages: stages is NULL")
     private List<StageDto> stages; // Stages in the pipeline
 
+    @NotNull(message = "Invalid currentStage: currentStage is NULL")
+    private StageDto currentStage; // Current Stage
+
     @NotNull(message = "Invalid createdDate: createdDate is NULL")
     private LocalDateTime createdDate; // Created Date
 

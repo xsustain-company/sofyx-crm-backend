@@ -43,6 +43,7 @@ public class PipelineService implements PipelineIService {
         pipeline.setNumberOfDeals(pipelineDto.getNumberOfDeals());
         pipeline.setStatus(pipelineDto.getStatus());
         pipeline.setStages(stageMapper.mapToStages(pipelineDto.getStages()));
+        pipeline.setCurrentStage(stageMapper.mapToStage(pipelineDto.getCurrentStage()));
         pipeline.setTotalDealValue(pipelineDto.getTotalDealValue());
         pipelineRepository.save(pipeline);
         return pipelineDto;
