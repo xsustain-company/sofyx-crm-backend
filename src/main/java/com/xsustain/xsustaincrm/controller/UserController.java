@@ -75,6 +75,7 @@ public class UserController {
         return userIService.getAllUsers();
     }
 
+
     @PutMapping("/update")
     public UserUpdateProfile updateProfile(@Valid @RequestBody UserUpdateProfile userUpdateProfile,
             @RequestParam long idUser) {

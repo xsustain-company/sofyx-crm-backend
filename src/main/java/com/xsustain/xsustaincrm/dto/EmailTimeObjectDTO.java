@@ -12,9 +12,10 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class EmailObjectDTO {
+public class EmailTimeObjectDTO {
     private String subject;
     private String content;
     private String receipient;
     private String name;
+    private String time;
 }

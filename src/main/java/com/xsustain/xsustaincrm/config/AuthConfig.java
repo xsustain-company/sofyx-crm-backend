@@ -58,6 +58,7 @@ public class AuthConfig {
                                 "/api/v1/mailing/search-inbox",
                                 "/api/v1/mailing/schedule-email",
                                 "/api/v1/mailing/send-email",
+                                "/api/v1/mailing/get-my-inbox",
                                 "**")
                         .permitAll().anyRequest()
                         .authenticated())

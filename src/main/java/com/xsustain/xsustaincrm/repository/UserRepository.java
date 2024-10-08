@@ -16,4 +16,5 @@ public interface UserRepository extends CrudRepository<User,Long> {
     User findByTokenToValidate(Long tokenToValidate);
     Optional<User> findByEmail(String email);
     User findByTokenToForgotPassword(Long tokenToForgotPassword);
+    
 }
