@@ -51,7 +51,7 @@ public class AuthConfig {
                                 "/api/v1/auth/resetPassword/**",
                                 "/api/v1/auth/forgotPassword",
                                 "/api/v1/mailing/oauth/hi",
-                                "/user-service/v3/api-docs/**", 
+                                "/user-service/v3/api-docs/**",
                                 "/actuator/health",
                                 "/api/v1/mailing/oauth/exchange",
                                 "/api/v1/mailing/get-email",
@@ -59,6 +59,7 @@ public class AuthConfig {
                                 "/api/v1/mailing/schedule-email",
                                 "/api/v1/mailing/send-email",
                                 "/api/v1/mailing/get-my-inbox",
+                                "/api/v1/mailing/get-one-inbox-item",
                                 "**")
                         .permitAll().anyRequest()
                         .authenticated())

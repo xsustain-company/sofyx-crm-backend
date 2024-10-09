@@ -2,6 +2,7 @@ package com.xsustain.xsustaincrm.controller;
 
 import com.nylas.models.ListResponse;
 import com.nylas.models.Message;
+import com.nylas.models.Response;
 import com.xsustain.xsustaincrm.dto.*;
 import com.xsustain.xsustaincrm.exception.UserServiceCustomException;
 import com.xsustain.xsustaincrm.model.InboxEmail;
@@ -35,7 +36,7 @@ public class NylasController {
 
         System.out.println(code);
         return nylasService.saveGrandId(code);
-    }    
+    }
 
     @GetMapping("/oauth/exchange")
     public ResponseEntity<String> exhangeToken(@Valid @RequestParam String code) throws MessagingException {
@@ -48,17 +49,23 @@ public class NylasController {
     public List<InboxEmail> getMyEmails() throws MessagingException {
         return nylasService.getMyCurrentEmails();
     }
-    
+
     @GetMapping("/get-email")
     public ListResponse<Message> getEmail() throws MessagingException {
         return nylasService.getEmail();
     }
 
-
     @GetMapping("/get-one-inbox")
     public ListResponse<Message> getOneInbx(@Valid @RequestParam String grantId) throws MessagingException {
         return nylasService.getOneInbox(grantId);
     }
+
+    @GetMapping("/get-one-inbox-item")
+    public Response<Message> getOneInbxItem(@Valid @RequestParam String grantId, @RequestParam String messageId)
+            throws MessagingException {
+        return nylasService.getOneInboxOneItem(grantId, messageId);
+    }
+
     @GetMapping("/search-inbox")
     public ListResponse<Message> searchInbox(@Valid @RequestParam String grantId, @RequestParam String search)
             throws MessagingException {
