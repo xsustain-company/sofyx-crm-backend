@@ -1,5 +1,6 @@
 package com.xsustain.xsustaincrm.dto;
 
+import com.xsustain.xsustaincrm.model.Pipeline;
 import com.xsustain.xsustaincrm.model.User;
 import com.xsustain.xsustaincrm.model.enume.PipelineType;
 import com.xsustain.xsustaincrm.model.enume.PriorityType;
@@ -37,10 +38,6 @@ public class TicketDto {
     @NotNull(message = "Invalid createdDate: createdDate is NULL")
     private LocalDateTime createdDate;
 
-    // @NotBlank(message = "Invalid pipeline: Empty pipeline")
-    @NotNull(message = "Invalid pipeline: pipeline is NULL")
-    private PipelineType pipeline;
-
     // @NotBlank(message = "Invalid status: Empty status")
     @NotNull(message = "Invalid status: status is NULL")
     private StatusType status;
@@ -56,6 +53,9 @@ public class TicketDto {
     // @NotBlank(message = "Invalid owner: Empty owner")
     @NotNull(message = "Invalid owner: owner is NULL")
     private User owner;
+
+    // @NotBlank(message = "Invalid pipeline: Empty pipeline")
+    private Pipeline pipeline;
 
     // @NotBlank(message = "Invalid assigned: Empty assigned")
     @NotNull(message = "Invalid assigned: assigned is NULL")

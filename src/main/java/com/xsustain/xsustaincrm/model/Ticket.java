@@ -33,9 +33,6 @@ public class Ticket {
     private LocalDateTime createdDate; //
 
     @Enumerated(EnumType.STRING)
-    private PipelineType pipeline; //
-
-    @Enumerated(EnumType.STRING)
     private StatusType status;
 
     @Enumerated(EnumType.STRING)
@@ -45,6 +42,9 @@ public class Ticket {
     private SourceType source; //
 
     private Boolean deleted;
+
+    @ManyToOne
+    private Pipeline pipeline;
 
     @ManyToOne
     private User owner; //
